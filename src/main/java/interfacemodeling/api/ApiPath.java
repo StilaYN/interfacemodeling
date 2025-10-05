@@ -5,5 +5,5 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiPath {
-    public static final String CALCULATE = "/calculate";
+    public static final String CALCULATE = "/api/calculate";
 }

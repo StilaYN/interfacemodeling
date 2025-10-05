@@ -4,7 +4,7 @@ import interfacemodeling.api.model.Action;
 import interfacemodeling.api.model.ErrorAction;
 import interfacemodeling.api.model.ExperimentResult;
 import interfacemodeling.api.model.ModelParametersRequest;
-import interfacemodeling.api.model.Rout;
+import interfacemodeling.api.model.Route;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,10 +30,10 @@ public class ExperimentService {
 
     private Double doSingleExperiment(ModelParametersRequest parametersRequest){
         Double usedTime = 0.0;
-        Rout currentRout = chooseRout(parametersRequest.routs());
+        Route currentRoute = chooseRout(parametersRequest.routes());
         Random random = new Random();
-        for (int i = 0; i < currentRout.path().size(); i++){
-            Action currentAction = getActionByPlaceId(parametersRequest.actions(),currentRout.path().get(i));
+        for (int i = 0; i < currentRoute.path().size(); i++){
+            Action currentAction = getActionByPlaceId(parametersRequest.actions(), currentRoute.path().get(i));
             boolean isError = checkError(currentAction.error().prob());
             usedTime += (currentAction.time().right() != null) ?
                     random.nextDouble(currentAction.time().left(), currentAction.time().right())
@@ -63,15 +63,15 @@ public class ExperimentService {
         }
     }
 
-    private Rout chooseRout(List<Rout> routs){
+    private Route chooseRout(List<Route> routes){
         Random random = new Random();
         double value = random.nextDouble(0, 1);
         double currentProb = 0.0;
-        for (Rout rout: routs){
+        for (Route route : routes){
             if(value >= currentProb){
-                return rout;
+                return route;
             }
-            currentProb += rout.prob();
+            currentProb += route.prob();
         }
         throw new RuntimeException("суммарная вероятность != 1");
     }

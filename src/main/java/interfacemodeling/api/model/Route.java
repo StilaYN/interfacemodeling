@@ -2,7 +2,7 @@ package interfacemodeling.api.model;
 
 import java.util.List;
 
-public record Rout(
+public record Route(
         Double prob,
         List<Integer> path
 ) {

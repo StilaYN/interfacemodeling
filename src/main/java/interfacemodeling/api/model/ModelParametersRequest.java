@@ -4,7 +4,7 @@ import java.util.List;
 
 public record ModelParametersRequest(
         int N,
-        List<Rout> routs,
+        List<Route> routes,
         List<Action> actions
 ) {
 }

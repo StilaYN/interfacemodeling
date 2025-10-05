@@ -1,0 +1,5 @@
+.git
+.idea
+*.log
+build/test-results
+build/reports
