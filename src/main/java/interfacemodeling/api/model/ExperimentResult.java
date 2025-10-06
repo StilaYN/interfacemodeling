@@ -6,7 +6,7 @@ import java.util.List;
 
 @Builder
 public record ExperimentResult(
-        List<Double> result,
+        List<SingleExperimentResult> result,
         Double middleValue
 ) {
 }

@@ -1,10 +1,6 @@
 package interfacemodeling.service;
 
-import interfacemodeling.api.model.Action;
-import interfacemodeling.api.model.ErrorAction;
-import interfacemodeling.api.model.ExperimentResult;
-import interfacemodeling.api.model.ModelParametersRequest;
-import interfacemodeling.api.model.Route;
+import interfacemodeling.api.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,20 +11,20 @@ import java.util.Random;
 public class ExperimentService {
 
     public ExperimentResult doExperiment(ModelParametersRequest parametersRequest){
-        List<Double> singleExperimentResult = new ArrayList<>();
+        List<SingleExperimentResult> singleExperimentResult = new ArrayList<>();
         for (int i = 0; i < parametersRequest.N(); i++){
             singleExperimentResult.add(doSingleExperiment(parametersRequest));
         }
         return ExperimentResult.builder()
                 .result(singleExperimentResult)
                 .middleValue(singleExperimentResult.stream()
-                        .mapToDouble(Double::doubleValue)
+                        .mapToDouble(SingleExperimentResult::usedTime)
                         .average()
                         .orElse(-1)
                 ).build();
     }
 
-    private Double doSingleExperiment(ModelParametersRequest parametersRequest){
+    private SingleExperimentResult doSingleExperiment(ModelParametersRequest parametersRequest){
         Double usedTime = 0.0;
         Route currentRoute = chooseRout(parametersRequest.routes());
         Random random = new Random();
@@ -42,7 +38,10 @@ public class ExperimentService {
                 i = processError(currentAction.error().action(), i);
             }
         }
-        return usedTime;
+        return SingleExperimentResult.builder()
+                .route(currentRoute)
+                .usedTime(usedTime)
+                .build();
     }
 
     private boolean checkError(Double prob){
