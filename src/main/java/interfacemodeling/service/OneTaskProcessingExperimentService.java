@@ -29,6 +29,7 @@ public class OneTaskProcessingExperimentService {
     }
 
     public Double doSingleExperiment(OneTaskModelParameterRequest parametersRequest){
+    private SingleExperimentResult doSingleExperiment(ModelParametersRequest parametersRequest){
         Double usedTime = 0.0;
         Route currentRoute = chooseRout(parametersRequest.routes());
         Random random = new Random();
