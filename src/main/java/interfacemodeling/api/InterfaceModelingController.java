@@ -1,8 +1,10 @@
 package interfacemodeling.api;
 
 import interfacemodeling.api.model.ExperimentResult;
-import interfacemodeling.api.model.ModelParametersRequest;
-import interfacemodeling.service.ExperimentService;
+import interfacemodeling.api.model.ModelParameterRequest;
+import interfacemodeling.api.model.OneTaskModelParameterRequest;
+import interfacemodeling.service.OneTaskProcessingExperimentService;
+import interfacemodeling.service.ProcessingExperimentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,11 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5000")
 public class InterfaceModelingController {
-    private final ExperimentService experimentService;
+
+    private final OneTaskProcessingExperimentService oneTaskProcessingExperimentService;
+
+    private final ProcessingExperimentService processingExperimentService;
+
     @PostMapping(ApiPath.CALCULATE)
-    public ExperimentResult doExperiment(@RequestBody ModelParametersRequest modelParametersRequest){
+    public ExperimentResult doExperiment(@RequestBody OneTaskModelParameterRequest oneTaskModelParameterRequest){
+        log.info("OneTaskModelParametersRequest: {}", oneTaskModelParameterRequest);
+        return oneTaskProcessingExperimentService.doExperiment(oneTaskModelParameterRequest);
+    }
+
+    @PostMapping(ApiPath.SMO_CALCULATE)
+    public double doSmoExperiment(@RequestBody ModelParameterRequest modelParametersRequest){
         log.info("ModelParametersRequest: {}", modelParametersRequest);
-        return experimentService.doExperiment(modelParametersRequest);
+        return processingExperimentService.doExperiment(modelParametersRequest);
     }
 
 }

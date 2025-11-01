@@ -3,7 +3,7 @@ package interfacemodeling.service;
 import interfacemodeling.api.model.Action;
 import interfacemodeling.api.model.ErrorAction;
 import interfacemodeling.api.model.ExperimentResult;
-import interfacemodeling.api.model.ModelParametersRequest;
+import interfacemodeling.api.model.OneTaskModelParameterRequest;
 import interfacemodeling.api.model.Route;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Random;
 
 @Service
-public class ExperimentService {
+public class OneTaskProcessingExperimentService {
 
-    public ExperimentResult doExperiment(ModelParametersRequest parametersRequest){
+    public ExperimentResult doExperiment(OneTaskModelParameterRequest parametersRequest){
         List<Double> singleExperimentResult = new ArrayList<>();
         for (int i = 0; i < parametersRequest.N(); i++){
             singleExperimentResult.add(doSingleExperiment(parametersRequest));
@@ -28,7 +28,7 @@ public class ExperimentService {
                 ).build();
     }
 
-    private Double doSingleExperiment(ModelParametersRequest parametersRequest){
+    public Double doSingleExperiment(OneTaskModelParameterRequest parametersRequest){
         Double usedTime = 0.0;
         Route currentRoute = chooseRout(parametersRequest.routes());
         Random random = new Random();
