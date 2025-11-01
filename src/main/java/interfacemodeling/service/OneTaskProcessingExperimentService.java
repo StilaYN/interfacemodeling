@@ -5,6 +5,7 @@ import interfacemodeling.api.model.ErrorAction;
 import interfacemodeling.api.model.ExperimentResult;
 import interfacemodeling.api.model.OneTaskModelParameterRequest;
 import interfacemodeling.api.model.Route;
+import interfacemodeling.api.model.SingleExperimentResult;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,22 +16,21 @@ import java.util.Random;
 public class OneTaskProcessingExperimentService {
 
     public ExperimentResult doExperiment(OneTaskModelParameterRequest parametersRequest){
-        List<Double> singleExperimentResult = new ArrayList<>();
+        List<SingleExperimentResult> singleExperimentResult = new ArrayList<>();
         for (int i = 0; i < parametersRequest.N(); i++){
             singleExperimentResult.add(doSingleExperiment(parametersRequest));
         }
         return ExperimentResult.builder()
                 .result(singleExperimentResult)
                 .middleValue(singleExperimentResult.stream()
-                        .mapToDouble(Double::doubleValue)
+                        .mapToDouble(SingleExperimentResult::usedTime)
                         .average()
                         .orElse(-1)
                 ).build();
     }
 
-    public Double doSingleExperiment(OneTaskModelParameterRequest parametersRequest){
-    private SingleExperimentResult doSingleExperiment(ModelParametersRequest parametersRequest){
-        Double usedTime = 0.0;
+    public SingleExperimentResult doSingleExperiment(OneTaskModelParameterRequest parametersRequest){
+        double usedTime = 0.0;
         Route currentRoute = chooseRout(parametersRequest.routes());
         Random random = new Random();
         for (int i = 0; i < currentRoute.path().size(); i++){
@@ -43,7 +43,10 @@ public class OneTaskProcessingExperimentService {
                 i = processError(currentAction.error().action(), i);
             }
         }
-        return usedTime;
+        return SingleExperimentResult.builder()
+                .route(currentRoute)
+                .usedTime(usedTime)
+                .build();
     }
 
     private boolean checkError(Double prob){

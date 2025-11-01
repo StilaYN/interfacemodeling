@@ -29,7 +29,7 @@ public class ProcessingExperimentService {
             waitTimes.addAll(oneCycleResult._2());
             repairTimes.add(oneTaskProcessingExperimentService.doSingleExperiment(
                             new OneTaskModelParameterRequest(1, request.routes1(), request.actions1())
-                    )
+                    ).usedTime()
             );
         }
 
@@ -54,7 +54,7 @@ public class ProcessingExperimentService {
             }
             double processingTime = oneTaskProcessingExperimentService.doSingleExperiment(
                     new OneTaskModelParameterRequest(1, request.routes1(), request.actions1())
-            );
+            ).usedTime();
             double serviceStartTime = Math.max(currentTime, serverFreeTime);
             double completionTime = Math.min(serviceStartTime + processingTime, timeToBreak);
             serverFreeTime = completionTime;
