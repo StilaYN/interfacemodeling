@@ -81,6 +81,7 @@ public class ProcessingExperimentService {
     ) {
         return (weightWaitTime * waitTime.stream().mapToDouble(Double::doubleValue).sum()
                 + weightRepairTime * repairTime.stream().mapToDouble(Double::doubleValue).sum())
-                / workTime.stream().mapToDouble(Double::doubleValue).sum();
+                / (workTime.stream().mapToDouble(Double::doubleValue).sum()
+                + repairTime.stream().mapToDouble(Double::doubleValue).sum());
     }
 }
