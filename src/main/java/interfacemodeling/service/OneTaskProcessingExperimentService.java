@@ -72,10 +72,10 @@ public class OneTaskProcessingExperimentService {
         double value = random.nextDouble(0, 1);
         double currentProb = 0.0;
         for (Route route : routes){
-            if(value >= currentProb){
+            currentProb += route.prob();
+            if(value <= currentProb){
                 return route;
             }
-            currentProb += route.prob();
         }
         throw new RuntimeException("суммарная вероятность != 1");
     }
