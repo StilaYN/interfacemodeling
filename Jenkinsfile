@@ -30,7 +30,24 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker run --rm ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} java -cp app.jar org.springframework.boot.loader.PropertiesLauncher --spring.profiles.active=test
+                        timeout 20 docker run --rm --name test-container-${BUILD_NUMBER} ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} \
+                        java -cp app.jar org.springframework.boot.loader.PropertiesLauncher --spring.profiles.active=test
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Locally') {
+            when {
+                branch 'main'  // или любая другая ветка, по которой нужно деплоить
+            }
+            steps {
+                script {
+                    echo "Deploying locally..."
+                    sh """
+                        docker stop ${CONTAINER_NAME} || true
+                        docker rm ${CONTAINER_NAME} || true
+                        docker run -d --name ${CONTAINER_NAME} -p 5000:5000 ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
                     """
                 }
             }
