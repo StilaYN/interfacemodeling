@@ -18,6 +18,14 @@ pipeline {
             }
         }
 
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh "gradle test"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -26,16 +34,7 @@ pipeline {
             }
         }
 
-        stage('Test Docker Image') {
-            steps {
-                script {
-                    sh """
-                        timeout 20 docker run --rm --name test-container-${BUILD_NUMBER} ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} \
-                        java -cp app.jar org.springframework.boot.loader.PropertiesLauncher --spring.profiles.active=test
-                    """
-                }
-            }
-        }
+
 
         stage('Deploy Locally') {
             when {
