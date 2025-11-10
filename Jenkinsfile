@@ -43,16 +43,6 @@ pipeline {
         }
         success {
             echo "✅ Сборка и локальный деплой прошли успешно!"
-            steps {
-                                        script {
-                                            echo "Deploying locally..."
-                                            sh """
-                                                docker stop ${CONTAINER_NAME} || true
-                                                docker rm ${CONTAINER_NAME} || true
-                                                docker run -d --name ${CONTAINER_NAME} -p 5000:5000 ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
-                                            """
-                                        }
-                                    }
         }
         failure {
             echo "❌ Сборка или деплой не удалась!"
