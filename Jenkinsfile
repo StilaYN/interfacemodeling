@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-            cron('H/10 * * * *')
+        cron('H/10 * * * *')
     }
 
     environment {
@@ -21,7 +21,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
+                    // Используем buildx вместо build
+                    sh "docker buildx build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} . --load"
                 }
             }
         }
@@ -29,8 +30,6 @@ pipeline {
         stage('Test Docker Image') {
             steps {
                 script {
-                    // Запуск тестов в контейнере (если в приложении есть тесты)
-                    // Пример: запуск тестов в Gradle до сборки Docker
                     sh """
                         docker run --rm ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} java -cp app.jar org.springframework.boot.loader.PropertiesLauncher --spring.profiles.active=test
                     """
@@ -44,18 +43,10 @@ pipeline {
             }
             steps {
                 script {
-                    // Остановка старого контейнера (если есть)
                     sh """
                         docker stop ${CONTAINER_NAME} || true
                         docker rm ${CONTAINER_NAME} || true
-                    """
-
-                    // Запуск нового контейнера
-                    sh """
-                        docker run -d \
-                          --name ${CONTAINER_NAME} \
-                          -p 5000:5000 \
-                          ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
+                        docker run -d --name ${CONTAINER_NAME} -p 5000:5000 ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
                     """
                 }
             }
@@ -64,7 +55,6 @@ pipeline {
 
     post {
         always {
-            // Очистка образов старых сборок (опционально)
             sh "docker system prune -f || true"
         }
         success {
