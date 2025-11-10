@@ -37,9 +37,6 @@ pipeline {
 
 
         stage('Deploy Locally') {
-            when {
-                branch 'main'  // или любая другая ветка, по которой нужно деплоить
-            }
             steps {
                 script {
                     echo "Deploying locally..."
