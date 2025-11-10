@@ -38,10 +38,11 @@ pipeline {
 
         stage('Deploy Locally') {
             when {
-                branch 'main'  // или любая другая ветка
+                branch 'main'  // или любая другая ветка, по которой нужно деплоить
             }
             steps {
                 script {
+                    echo "Deploying locally..."
                     sh """
                         docker stop ${CONTAINER_NAME} || true
                         docker rm ${CONTAINER_NAME} || true
