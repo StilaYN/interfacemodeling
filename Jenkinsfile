@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-        cron('H/10 * * * *')
+        pollSCM('H/5 * * * *')
     }
 
     environment {
@@ -43,7 +43,7 @@ pipeline {
                     sh """
                         docker stop ${CONTAINER_NAME} || true
                         docker rm ${CONTAINER_NAME} || true
-                        docker run -d --name ${CONTAINER_NAME} -p 5000:5000 ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
+                        docker run -d --restart=unless-stopped --name ${CONTAINER_NAME} -p 5000:5000 ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
                     """
                 }
             }
