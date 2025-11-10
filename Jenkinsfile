@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+            cron('H/10 * * * *')
+    }
+
     environment {
         DOCKER_IMAGE_NAME = 'my-spring-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
