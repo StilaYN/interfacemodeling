@@ -21,8 +21,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Используем buildx вместо build
-                    sh "docker buildx build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} . --load"
+                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
                 }
             }
         }
